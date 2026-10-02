@@ -1,0 +1,27 @@
+name: HTML Linter & Deploy
+
+on:
+  push:
+    branches: [ "main" ] # Berjalan otomatis setiap kali push ke branch main
+
+jobs:
+  # 1. Tahap Testing (Mengecek file HTML dari error)
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Test HTML syntax
+        uses: HTML-Validate/html-validate-action@v1
+
+  # 2. Tahap Auto Deploy ke GitHub Pages
+  deploy:
+    needs: test # Deploy hanya berjalan jika tahap 'test' berhasil
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
